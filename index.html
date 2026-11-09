@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Κάθοδος · Δικαστήριο</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=GFS+Didot&family=Commissioner:wght@400;500;600&family=Fira+Mono:wght@400;500&display=swap">
+<style>
+/* Sandbox for harvesting smartass answers: everything is accepted, the judges decide later.
+   Same night-underworld look as the game. */
+:root {
+  --void: #0b1013; --panel: rgba(14, 22, 27, .94); --line: rgba(201, 164, 92, .35);
+  --mist: #e4e6da; --mute: #9aa8a2; --obol: #d2ad62; --soul: #bfe9ff; --t1: #6fa8b4; --judge: #c9a7ff;
+  --display: "GFS Didot", Georgia, serif; --body: "Commissioner", "Segoe UI", system-ui, sans-serif;
+  --mono: "Fira Mono", ui-monospace, Consolas, monospace; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(120% 70% at 50% 0%, #1c2a30 0%, #0f171b 45%, var(--void) 100%);
+  color: var(--mist); font: 16px/1.45 var(--body); padding: max(16px, env(safe-area-inset-top)) 16px 40px; }
+button, input, select { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--obol); outline-offset: 2px; }
+.wrap { width: min(620px, 100%); margin: 0 auto; display: grid; gap: 14px; }
+header { text-align: center; padding: 6px 0 2px; }
+header small { font: .7rem var(--mono); letter-spacing: .3em; color: var(--obol); }
+header h1 { margin: 4px 0 2px; font: 400 2.4rem/1 var(--display); }
+header p { margin: 6px auto 0; max-width: 34em; color: var(--mute); font-size: .92rem; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; font: .72rem var(--mono); letter-spacing: .14em; color: var(--mute); }
+.meta select { background: #0d1418; border: 1px solid rgba(228,230,218,.2); border-radius: 6px; padding: 4px 6px; max-width: 60%; font: .78rem var(--mono); letter-spacing: 0; }
+h2 { margin: 10px 0 4px; font: 400 1.6rem/1.2 var(--display); }
+.src { font: .7rem var(--mono); color: var(--mute); }
+form { display: grid; gap: 8px; margin-top: 12px; }
+.row { display: flex; gap: 8px; }
+input[type=text] { flex: 1; min-width: 0; background: rgba(0,0,0,.35); border: 1px solid rgba(228,230,218,.22); border-radius: 8px; padding: 11px 12px; }
+input.why { font-size: .88rem; padding: 8px 12px; }
+input::placeholder { color: var(--mute); }
+.btn { background: transparent; border: 1px solid var(--obol); color: var(--obol); border-radius: 8px; padding: 0 16px; font: 500 .82rem var(--mono); letter-spacing: .16em; cursor: pointer; }
+.btn.solid { background: var(--obol); color: #15110a; }
+.btn.ghost { border-color: rgba(228,230,218,.25); color: var(--mist); }
+.btn:disabled { opacity: .35; cursor: default; }
+.answers { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; }
+.answers li { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 8px; background: rgba(0,0,0,.28); }
+.answers .a { font-weight: 500; overflow-wrap: anywhere; }
+.answers .w { grid-column: 1 / -1; font-size: .82rem; color: var(--mute); margin-top: -2px; }
+.tag { font: .68rem var(--mono); letter-spacing: .08em; padding: 3px 7px; border-radius: 999px; white-space: nowrap; }
+.tag.common { color: var(--t1); border: 1px solid rgba(111,168,180,.5); }
+.tag.gem { color: #15110a; background: var(--obol); }
+.tag.judge { color: var(--judge); border: 1px solid rgba(201,167,255,.5); }
+.del { background: none; border: 0; color: var(--mute); cursor: pointer; font-size: 1rem; padding: 0 2px; }
+.reveal { margin-top: 12px; font-size: .88rem; color: var(--mute); }
+.reveal summary { cursor: pointer; font: .74rem var(--mono); letter-spacing: .12em; color: var(--obol); }
+.reveal p { margin: 8px 0 0; }
+.nav { display: flex; gap: 8px; justify-content: space-between; }
+.nav .btn { padding: 10px 14px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+.stats div { background: rgba(0,0,0,.28); border-radius: 8px; padding: 8px 4px; }
+.stats b { display: block; font: 500 1.3rem var(--mono); }
+.stats span { font: .64rem var(--mono); letter-spacing: .12em; color: var(--mute); }
+.stats .j b { color: var(--judge); } .stats .g b { color: var(--obol); } .stats .c b { color: var(--t1); }
+.out { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.out .btn { padding: 10px 14px; }
+.msg { min-height: 1.2em; font: .78rem var(--mono); color: var(--obol); margin-top: 6px; }
+.flash { animation: flash .9s ease-out; }
+@keyframes flash { from { box-shadow: 0 0 0 3px rgba(201,167,255,.55); } to { box-shadow: 0 0 0 0 rgba(201,167,255,0); } }
+@media (prefers-reduced-motion: reduce) { .flash { animation: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <small>ΚΑΘΟΔΟΣ · ΔΟΚΙΜΑΣΤΙΚΗ ΒΟΥΤΙΑ</small>
+    <h1>Το Δικαστήριο</h1>
+    <p>Εδώ όλα περνάνε. Γράψε την πιο σπάνια απάντηση που στέκει, ή την πιο έξυπνη που «τεχνικά ισχύει». Ο Μίνωας, ο Ραδάμανθυς και ο Αιακός αποφασίζουν μετά.</p>
+  </header>
+
+  <section class="card" id="card">
+    <div class="meta"><span id="pos"></span><select id="jump" aria-label="Διάλεξε ερώτηση"></select></div>
+    <h2 id="q"></h2>
+    <div class="src" id="src"></div>
+    <form id="form" autocomplete="off">
+      <div class="row">
+        <input type="text" id="ans" placeholder="η απάντησή σου…" aria-label="Απάντηση" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+        <button class="btn solid" type="submit">Ρίξε</button>
+      </div>
+      <input type="text" class="why" id="why" placeholder="γιατί μετράει; (προαιρετικό, για τους κριτές)" aria-label="Γιατί μετράει">
+    </form>
+    <ul class="answers" id="list"></ul>
+    <details class="reveal" id="reveal"><summary>ΤΙ ΛΕΕΙ Ο ΚΟΣΜΟΣ</summary><p id="revealBody"></p></details>
+  </section>
+
+  <div class="nav">
+    <button class="btn ghost" id="prev" type="button">◂ Προηγούμενη</button>
+    <button class="btn ghost" id="next" type="button">Επόμενη ▸</button>
+  </div>
+
+  <section class="card">
+    <div class="stats">
+      <div class="c"><b id="sC">0</b><span>ΟΛΟΙ ΤΟ ΛΕΝΕ</span></div>
+      <div class="g"><b id="sG">0</b><span>ΟΒΟΛΟΙ</span></div>
+      <div class="j"><b id="sJ">0</b><span>ΣΤΟΥΣ ΚΡΙΤΕΣ</span></div>
+    </div>
+    <div class="out">
+      <button class="btn solid" id="copy" type="button">Αντιγραφή για τον Claude</button>
+      <button class="btn" id="dl" type="button">Λήψη αρχείου</button>
+      <button class="btn ghost" id="wipe" type="button">Καθάρισμα</button>
+    </div>
+    <div class="msg" id="msg"></div>
+  </section>
+</div>
+
+<script>
+// Prompts from kathodos_project/bank/drafts/krillion-batch-02.md. common = what most people say (shallow), gem = the οβολός.
+const P = [
+  { q: "Πες κάτι που έχει τρύπες", src: "νέα", common: ["σουρωτήρι","κόσκινο","κουμπί","τυρί","σφουγγάρι","δίχτυ","τρυπητό","φλογέρα","ζώνη","παπούτσι","αλατιέρα","κουλούρι"], gem: "το ανθρώπινο σώμα" },
+  { q: "Πες κάτι που αδειάζεις τακτικά στο σπίτι", src: "Krillion #116", common: ["σκουπίδια","κάδος","πλυντήριο πιάτων","πλυντήριο","τασάκι","ψυγείο","ανακύκλωση","νεροχύτης","καλάθι απλύτων","ντουλάπι"], gem: "σακούλα ηλεκτρικής σκούπας" },
+  { q: "Πες κάτι με λεπίδα που γυρίζει", src: "Krillion #101", common: ["μπλέντερ","ανεμιστήρας","ελικόπτερο","μίξερ","πολυμίξερ","χλοοκοπτικό","τρυπάνι","ανεμογεννήτρια","αεροπλάνο","κουζινομηχανή"], gem: "ροδέλα για πίτσα" },
+  { q: "Πες κάτι που ανακινείς πριν το χρησιμοποιήσεις", src: "Krillion #91", common: ["χυμός","σπρέι","φραπές","σαμπουάν","γάλα","σάλτσα","κέτσαπ","αποσμητικό","φάρμακο","σιρόπι","αντηλιακό"], gem: "θερμόμετρο υδραργύρου" },
+  { q: "Πες κάτι που πουλιέται σε ρολό", src: "Krillion #88", common: ["χαρτί υγείας","αλουμινόχαρτο","μεμβράνη","χαρτί κουζίνας","σελοτέιπ","σακούλες σκουπιδιών","ταπετσαρία","λαδόχαρτο","υφασμα","φιλμ"], gem: "χλοοτάπητας" },
+  { q: "Πες κάτι που έχει σέλα", src: "Krillion #97", common: ["ποδήλατο","άλογο","μηχανή","μοτοσικλέτα","γάιδαρος","πατίνι","καμήλα","μουλάρι","ποδήλατο γυμναστικής"], gem: "καμήλα" },
+  { q: "Πες κάτι για το οποίο υπάρχει ελάχιστο όριο ηλικίας", src: "Krillion #101", common: ["δίπλωμα οδήγησης","ψήφος","αλκοόλ","τσιγάρα","γάμος","κλαμπ","καζίνο","τατουάζ","δουλειά","στρατός"], gem: "σύνταξη" },
+  { q: "Πες έναν τρόπο να επικοινωνήσεις με κάποιον (τρόποι, όχι εφαρμογές)", src: "Krillion #107", common: ["τηλέφωνο","μήνυμα","γράμμα","email","βιντεοκλήση","φωνή","νοηματική","φαξ","κάρτα"], gem: "σήματα καπνού" },
+  { q: "Πες ένα μέρος του σώματος που έχουμε μόνο ένα", src: "Krillion #98", common: ["μύτη","καρδιά","στόμα","γλώσσα","κεφάλι","συκώτι","στομάχι","αφαλός","λαιμός","εγκέφαλος","σπονδυλική στήλη"], gem: "σκωληκοειδής απόφυση" },
+  { q: "Πες ένα ζώο που τρέχει πιο γρήγορα από άνθρωπο", src: "Krillion #113", common: ["τσιτάχ","άλογο","σκύλος","λιοντάρι","λαγός","γάτα","στρουθοκάμηλος","ελάφι","λύκος","τίγρη","αντιλόπη"], gem: "κουνέλι" },
+  { q: "Πες ένα ζώο που το όνομά του περιέχει άλλο ζώο", src: "Krillion #86", common: ["ιππόκαμπος","σκυλόψαρο","αγριόγατα","λαγοκέφαλος","αλεπόσκυλο","χελιδονόψαρο","ιπποπόταμος","καμηλοπάρδαλη"], gem: "αλογάκι της Παναγίας" },
+  { q: "Πες κάτι που είναι φυσικά μπλε", src: "Krillion #112", common: ["ουρανός","θάλασσα","μύρτιλο","ωκεανός","νερό","μάτια","παγόβουνο","πλανήτης Ποσειδώνας","παγώνι"], gem: "αλκυόνη" },
+  { q: "Πες ένα φαγητό με γέμιση", src: "Krillion #115", common: ["γεμιστά","ντολμαδάκια","κρουασάν","τυρόπιτα","σπανακόπιτα","ραβιόλια","πίτα","ντόνατ","μπουγάτσα","λαχανοντολμάδες","σουφλέ"], gem: "παπουτσάκια" },
+  { q: "Πες ένα φαγητό που πρέπει να σπάσεις ή να καθαρίσεις πριν το φας", src: "Krillion #98", common: ["καρύδι","αυγό","γαρίδα","πορτοκάλι","μπανάνα","αμύγδαλο","φιστίκι","κάστανο","μανταρίνι","καρπούζι","ρόδι"], gem: "καβούρι" },
+  { q: "Πες ένα μέσο μεταφοράς χωρίς ρόδες", src: "Krillion #98", common: ["πλοίο","αεροπλάνο","τελεφερίκ","βάρκα","έλκηθρο","ελικόπτερο","υποβρύχιο","σκι","άλογο","καγιάκ"], gem: "αερόστατο" },
+  { q: "Πες ένα παιχνίδι για ακριβώς δύο παίκτες (επιτραπέζιο, χαρτιά ή με τα χέρια)", src: "Krillion #80", common: ["τάβλι","σκάκι","ντάμα","τρίλιζα","πινγκ πονγκ","πέτρα ψαλίδι χαρτί","ναυμαχία","τένις"], gem: "ξερή" },
+  { q: "Πες κάτι που φτιάχτηκε για να γεμίζει με αέρα", src: "Krillion #77", common: ["μπαλόνι","σωσίβιο","μπάλα","λάστιχο","στρώμα θαλάσσης","φουσκωτό","αερόσακος","λαστιχάκι","μπρατσάκια"], gem: "γκάιντα" },
+  { q: "Πες κάτι που φοράς για προστασία (όχι καθημερινά ρούχα)", src: "Krillion #114", common: ["κράνος","γάντια","μάσκα","γυαλιά","επιγονατίδες","ζώνη","αλεξίσφαιρο","γιλέκο","καπέλο"], gem: "μπρατσάκια" },
+  { q: "Πες μια χώρα που έχει «ία» στο όνομά της", src: "Krillion #117 («in»)", common: ["Ιταλία","Γαλλία","Γερμανία","Ισπανία","Τουρκία","Ρωσία","Βουλγαρία","Αυστραλία","Ινδία","Αυστρία","Νορβηγία","Σουηδία"], gem: "Μαυριτανία" },
+  { q: "Πες κάτι που μετράει κάποιος στο ανθρώπινο σώμα", src: "Krillion #106", common: ["πίεση","θερμοκρασία","βάρος","ύψος","σφυγμός","ζάχαρο","χοληστερίνη","λίπος","παλμοί","μέση"], gem: "οξυγόνο στο αίμα" },
+  { q: "Πες κάτι που θα βρεις σε ένα περίπτερο", src: "ελληνική", common: ["τσιγάρα","νερό","τσίχλες","εφημερίδα","περιοδικά","αναπτήρας","σοκολάτα","παγωτό","καρτοκινητή","αναψυκτικό","κουλούρι"], gem: "κομπολόι" },
+  { q: "Πες κάτι που θα δεις σε ένα ελληνικό πανηγύρι", src: "ελληνική", common: ["κλαρίνο","σουβλάκια","χορός","λουκουμάδες","μαλλί της γριάς","λούνα παρκ","παγωτό","ορχήστρα","ποπ κορν","μπαλόνια"], gem: "αεροβόλο για σκοποβολή" },
+  { q: "Πες κάτι που κάνουν οι Έλληνες το Πάσχα", src: "ελληνική", common: ["τσούγκρισμα αυγών","σούβλα","Ανάσταση","βάψιμο αυγών","μαγειρίτσα","Επιτάφιος","λαμπάδα","κροτίδες","εκκλησία","χορός"], gem: "κάψιμο του Ιούδα" },
+  { q: "Πες κάτι που έχει ένα ελληνικό μπαλκόνι", src: "ελληνική", common: ["γλάστρες","απλώστρα","τραπεζάκι","καρέκλες","τέντα","κλιματιστικό","ψησταριά","σημαία","λουλούδια"], gem: "κλουβί με καναρίνι" },
+  { q: "Πες ένα παιχνίδι της γειτονιάς ή του σχολικού διαλείμματος", src: "ελληνική", common: ["κρυφτό","κυνηγητό","μήλα","λάστιχο","κουτσό","τυφλόμυγα","μπάλα","αμπάριζα","μακριά γαϊδούρα","σχοινάκι"], gem: "περνά περνά η μέλισσα" },
+  { q: "Πες κάτι που φτιάχνεται από γάλα", src: "ελληνική", common: ["γιαούρτι","τυρί","βούτυρο","παγωτό","ρυζόγαλο","κεφίρ","φέτα","κρέμα","μπεσαμέλ","γαλακτομπούρεκο"], gem: "τραχανάς" },
+  { q: "Πες ένα προϊόν ελληνικής εταιρείας που βρίσκεις στο σούπερ μάρκετ πάνω από 30 χρόνια", src: "ελληνική", common: ["ΙΟΝ","Μεβγάλ","Παπαδοπούλου","Κρι Κρι","Μίσκο","Παυλίδης","Δέλτα","Λουμίδης","Ήπειρος","ΦΑΓΕ"], gem: "ΗΒΗ" },
+  { q: "Πες ένα μέρος στην Ελλάδα που το όνομά του τελειώνει σε «-πολη»", src: "ελληνική", common: ["Αλεξανδρούπολη","Τρίπολη","Ηλιούπολη","Αργυρούπολη","Μεγαλόπολη","Σταυρούπολη","Νεάπολη","Αμφίπολη"], gem: "Καλλίπολη" },
+  { q: "Πες μια λέξη που αρχίζει από «κουτσ-»", src: "ελληνική", common: ["κουτσομπολιό","κουτσός","κουτσό","κουτσομπόλης","κουτσουλιά","κουτσαίνω"], gem: "κουτσοδόντης" },
+  { q: "Πες ένα υποκοριστικό σε «-άκι»", src: "ελληνική", common: ["παιδάκι","σπιτάκι","σκυλάκι","γατάκι","φιλάκι","λιγάκι","καφεδάκι","σουβλάκι","ποτηράκι","μωράκι"], gem: "ρεματάκι" },
+];
+
+const KEY = "kathodos-dikastirio-v1";
+const $ = id => document.getElementById(id);
+let st = { cur: 0, a: {} };
+try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// Loose compare: no accents, no case, no leading article, final ς = σ, light plural/stem tolerance.
+const ART = new Set(["ο","η","το","οι","τα","ενα","ενας","μια","τον","την","τη"]);
+function fold(s) {
+  let t = s.toLowerCase().normalize("NFD").replace(/\p{Mn}/gu, "").replace(/ς/g, "σ").replace(/[«»"'.,;:!?·()\-–]+/g, " ").trim().split(/\s+/);
+  while (t.length > 1 && ART.has(t[0])) t.shift();
+  return t.join(" ");
+}
+const stem = k => k.length > 4 ? k.replace(/(ια|ιεσ|εσ|οι|ου|ων|α|ε|η|ι|ο|υ|σ)$/, "") : k;
+const same = (a, b) => { const x = fold(a), y = fold(b); return x === y || (x.length > 4 && stem(x) === stem(y)); };
+function verdict(p, text) {
+  if (same(text, p.gem)) return "gem";
+  if (p.common.some(c => same(text, c))) return "common";
+  return "judge";
+}
+const LABEL = { common: "Αχέροντας · όλοι το λένε", gem: "Οβολός!", judge: "⚖ στους κριτές" };
+
+function render(flashLast) {
+  const p = P[st.cur], mine = st.a[st.cur] || [];
+  $("pos").textContent = `${st.cur + 1} / ${P.length}`;
+  $("q").textContent = p.q; $("src").textContent = p.src === "νέα" ? "νέα ερώτηση" : p.src === "ελληνική" ? "ελληνική ερώτηση" : "εμπνευσμένη από " + p.src;
+  $("list").innerHTML = mine.map((x, i) => `<li${flashLast && i === mine.length - 1 ? ' class="flash"' : ""}>
+      <span class="a">${esc(x.t)}</span><span class="tag ${x.v}">${LABEL[x.v]}</span><button class="del" data-i="${i}" aria-label="Σβήσε">×</button>
+      ${x.w ? `<span class="w">«${esc(x.w)}»</span>` : ""}</li>`).join("");
+  $("list").querySelectorAll(".del").forEach(b => b.onclick = () => { mine.splice(+b.dataset.i, 1); save(); render(); });
+  const shown = mine.length > 0;
+  $("reveal").hidden = !shown; if (!shown) $("reveal").open = false;
+  $("revealBody").innerHTML = `Οι περισσότεροι λένε: ${p.common.map(esc).join(", ")}.<br>Ο οβολός που είχαμε κρύψει: <b style="color:var(--obol)">${esc(p.gem)}</b>.`;
+  $("prev").disabled = st.cur === 0; $("next").disabled = st.cur === P.length - 1;
+  $("jump").value = st.cur;
+  let c = 0, g = 0, j = 0; for (const list of Object.values(st.a)) for (const x of list) x.v === "common" ? c++ : x.v === "gem" ? g++ : j++;
+  $("sC").textContent = c; $("sG").textContent = g; $("sJ").textContent = j;
+}
+$("jump").innerHTML = P.map((p, i) => `<option value="${i}">${i + 1}. ${esc(p.q.replace(/^Πες /, ""))}</option>`).join("");
+$("jump").onchange = e => { st.cur = +e.target.value; save(); render(); $("ans").focus(); };
+$("prev").onclick = () => { if (st.cur > 0) { st.cur--; save(); render(); } };
+$("next").onclick = () => { if (st.cur < P.length - 1) { st.cur++; save(); render(); } };
+$("form").onsubmit = e => {
+  e.preventDefault();
+  const t = $("ans").value.trim(); if (!t) return;
+  const list = st.a[st.cur] = st.a[st.cur] || [];
+  if (list.some(x => fold(x.t) === fold(t))) { $("ans").select(); return; }
+  list.push({ t, w: $("why").value.trim(), v: verdict(P[st.cur], t) });
+  $("ans").value = ""; $("why").value = ""; save(); render(true); $("ans").focus();
+};
+
+function exportText() {
+  const out = ["Κάθοδος · Δικαστήριο · " + new Date().toLocaleString("el-GR"), ""];
+  P.forEach((p, i) => {
+    const list = st.a[i] || []; if (!list.length) return;
+    out.push(`#${i + 1} ${p.q}`);
+    for (const x of list) out.push(`- ${x.t} [${x.v === "common" ? "όλοι" : x.v === "gem" ? "οβολός" : "κριτές"}]${x.w ? " γιατί: " + x.w : ""}`);
+    out.push("");
+  });
+  return out.length > 2 ? out.join("\n") : "";
+}
+function say(m) { $("msg").textContent = m; setTimeout(() => { if ($("msg").textContent === m) $("msg").textContent = ""; }, 3500); }
+$("copy").onclick = async () => {
+  const t = exportText(); if (!t) return say("Δεν έχεις γράψει ακόμα τίποτα.");
+  try { await navigator.clipboard.writeText(t); say("Αντιγράφηκε. Κάν' το επικόλληση στη συζήτηση με τον Claude."); }
+  catch (e) { const ta = document.createElement("textarea"); ta.value = t; document.body.append(ta); ta.select(); document.execCommand("copy"); ta.remove(); say("Αντιγράφηκε."); }
+};
+$("dl").onclick = () => {
+  const t = exportText(); if (!t) return say("Δεν έχεις γράψει ακόμα τίποτα.");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify({ prompts: P.map(p => p.q), answers: st.a }, null, 1)], { type: "application/json" }));
+  a.download = "kathodos-dikastirio.json"; a.click(); URL.revokeObjectURL(a.href);
+};
+$("wipe").onclick = () => { if (confirm("Να σβηστούν όλες οι απαντήσεις σου;")) { st = { cur: 0, a: {} }; save(); render(); } };
+render(); $("ans").focus();
+</script>
+</body>
+</html>
