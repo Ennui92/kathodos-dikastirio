@@ -159,8 +159,27 @@ function fold(s) {
   while (t.length > 1 && ART.has(t[0])) t.shift();
   return t.join(" ");
 }
-const stem = k => k.length > 4 ? k.replace(/(ια|ιεσ|εσ|οι|ου|ων|α|ε|η|ι|ο|υ|σ)$/, "") : k;
-const same = (a, b) => { const x = fold(a), y = fold(b); return x === y || (x.length > 4 && stem(x) === stem(y)); };
+// Strip every trailing vowel/σ on both sides, so δίχτυ = δίχτυα = δίχτυα.
+const stem = k => k.length > 4 ? k.replace(/[αεηιουωσ]+$/, "") : k;
+function dist(a, b) { // edit distance with swaps, small strings only
+  const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
+  for (let j = 0; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) {
+    d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + (a[i-1] !== b[j-1]));
+    if (i > 1 && j > 1 && a[i-1] === b[j-2] && a[i-2] === b[j-1]) d[i][j] = Math.min(d[i][j], d[i-2][j-2] + 1);
+  }
+  return d[a.length][b.length];
+}
+// η/ι/υ/οι/ει all sound "i" in Greek, ο/ω sound "o": typos between them are free.
+const sound = k => k.replace(/οι|ει|υι/g, "ι").replace(/[ηυ]/g, "ι").replace(/ω/g, "ο").replace(/αι/g, "ε");
+function same(a, b) {
+  const x = fold(a), y = fold(b);
+  if (x === y) return true;
+  const sx = stem(sound(x)), sy = stem(sound(y));
+  if (sx.length > 3 && sx === sy) return true;
+  const lim = Math.min(sx.length, sy.length) >= 10 ? 2 : Math.min(sx.length, sy.length) >= 6 ? 1 : 0;
+  return lim > 0 && dist(sx, sy) <= lim;
+}
 function verdict(p, text) {
   if (same(text, p.gem)) return "gem";
   if (p.common.some(c => same(text, c))) return "common";
